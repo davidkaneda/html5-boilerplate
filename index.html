@@ -1,80 +1,205 @@
 <!doctype html>
-<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
 <!--[if lt IE 7 ]> <html class="no-js ie6" lang="en"> <![endif]-->
 <!--[if IE 7 ]>    <html class="no-js ie7" lang="en"> <![endif]-->
 <!--[if IE 8 ]>    <html class="no-js ie8" lang="en"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-
-  <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
-       Remove this if you use the .htaccess -->
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-  <title></title>
-  <meta name="description" content="">
-  <meta name="author" content="">
-
-  <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+  <title>{block:PostSummary}{PostSummary} &mdash; {/block:PostSummary}{Title}</title>
+  <meta name="description" content="{MetaDescription}">
+  <meta name="author" content="David Kaneda - http://9-bits.com | @davidkaneda">
+  <meta name="keywords" content="{block:Tags}{Tag}, {/block:Tags}{Title}">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="if:Show Following" content="1">
+  <meta name="if:Show Recent Tweet" content="1">
+  <meta name="if:Show Random Link" content="1">
 
-  <!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
-  <link rel="shortcut icon" href="/favicon.ico">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="text:Google Analytics ID" content=""/>
 
+  <meta name="text:TypeKit ID" content="">
+  <meta name="text:TypeKit header font" content="">
+  <meta name="text:TypeKit body font" content="">
 
-  <!-- CSS: implied media="all" -->
-  <link rel="stylesheet" href="css/style.css">
-
-  <!-- Uncomment if you are specifically targeting less enabled mobile browsers
-  <link rel="stylesheet" media="handheld" href="css/handheld.css">  -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="{RSS}">
+  <link rel="shortcut icon" href="{Favicon}">
+  <link rel="apple-touch-icon" href="{PortraitURL-128}">
+  <!-- <link rel="stylesheet" href="css/style.css"> -->
 
   <!-- All JavaScript at the bottom, except for Modernizr which enables HTML5 elements & feature detects -->
   <script src="js/libs/modernizr-1.7.min.js"></script>
-
+  {block:IfTypekitID}
+  <script type="text/javascript" src="//use.typekit.com/{text:Typekit ID}.js"></script>
+  <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+  {/block:IfTypekitID}
+  
+  <style type="text/css">
+      /* <![CDATA[ */
+          {block:IfTypekitID}
+              {block:IfTypekitHeaderFont}
+                  h1, h2, h3 {
+                      font-family: {text:Typekit header font};
+                  }
+              {/block:IfTypekitHeaderFont}
+              {block:IfTypekitBodyFont}
+                  body {
+                      font-family: {text:Typekit body font};
+                  }
+              {/block:IfTypekitBodyFont}
+          {/block:IfTypekitID}
+          {CustomCSS}
+      /* ]]> */
+  </style>
 </head>
-
 <body>
-
   <div id="container">
-    <header>
-
+    <header id="page-header">
+        <h1>{Title}</h1>
+        {Description}
+        <nav>
+            <ul>
+                {block:HasPages}
+                    {block:Pages}
+                        <li><a href="{URL}">{Label}</a></li>
+                    {/block:Pages}
+                {/block:HasPages}
+                {block:IfShowRandomLink}
+                    <li><a href="/random">Random</a></li>
+                {/block:ShowRandomLink}
+                <li><a href="{RSS}">Subscribe</a></li>
+            </ul>
+        </ul>
     </header>
     <div id="main" role="main">
+        {block:Posts}
+        {block:IndexPage}
+            {block:IfTwitterHandle}
+                {block:Post1}
+                    <h2><a href="{text:TwitterURL}">On Twitter</a></h2>
+                    <div class="post twitter_com">
+                        <div class="regular" id="tweet">
+                        </div>
+                    </div>
+                {/block:Post1}
+            {/block:IfTwitterHandle}
+        {/block:IndexPage}
+            {block:NewDayDate}
+                <h2><a href="/day/{Year}/{MonthNumberWithZero}/{DayOfMonthWithZero}">{DayOfWeek}, {Month} {DayOfMonth}{DayOfMonthSuffix}</span></a></h2>
+            {/block:NewDayDate}
 
+            <article class="post {TagsAsClasses}">
+                {block:IndexPage}
+                <div class="comments"><a title="Notes" href="{Permalink}">{block:NoteCount}{NoteCount}{/block:NoteCount}</a></div>
+                {/block:IndexPage}
+                {block:Regular}
+                    <div class="regular">
+                        {block:IndexPage}
+                            {block:Title}<h3><a href="{Permalink}">{Title}</a></h3>{/block:Title}
+                            <div>{Body}</div>
+                            <a href="{Permalink}" class="date" title="View this post">{12Hour}:{Minutes}{AmPm}</a>
+                        {/block:IndexPage}
+
+                        {block:PermalinkPage}
+                        {block:Title}{Title}{/block:Title}
+                        {Body}
+                        {/block:PermalinkPage} 
+                    </div>
+                {/block:Regular}
+                {block:Photo}
+                    <div class="photo">
+                        <span class="big">
+                            {LinkOpenTag}<img src="{PhotoURL-500}" alt="{PhotoAlt}" />{LinkCloseTag}
+                        </span>
+                        {block:Caption}
+                            <div class="meta">{Caption}</div>
+                        {/block:Caption}
+                        <a href="{Permalink}" class="date" title="{PhotoAlt}">{12Hour}:{Minutes}{AmPm}</a>
+                    </div>
+                {/block:Photo}
+                {block:Quote}
+                    <div class="quote">
+                        <a href="{Permalink}" class="date">{12Hour}:{Minutes}{AmPm}</a>
+                        <blockquote>{Quote}</blockquote>
+                        <cite>{block:Source}{Source}{/block:Source}</cite>
+                    </div>
+                {/block:Quote}
+                {block:Link}
+                    <div class="link">
+                        <a href="{URL}" {Target} class="titlelink {block:Description}hasDesc{/block:Description}"><span>{Name}</span>&nbsp;&#187;</a>
+                        {block:Description}<div class="meta">{Description}</div>{/block:Description}
+                        <a href="{Permalink}" class="date">{12Hour}:{Minutes}{AmPm}</a>
+                    </div>
+                {/block:Link}
+                {block:Conversation}
+                <article class="conversation">
+                    {block:Title}<h1><a href="{Permalink}">{Title}</a></h1>{/block:Title}
+                    <ul>
+                        {block:Lines}
+                        <li class="{Alt}">
+                            {block:Label}<span class="label">{Label}</span>{/block:Label}
+                            {Line}
+                        </li>
+                        {/block:Lines}
+                    </ul>
+                    <a href="{Permalink}" class="permalink">{MonthNumber}.{DayOfMonthWithZero}.{ShortYear}</a>
+                </article>
+                {/block:Conversation}
+                {block:Video}
+                <div class="video">
+                    <div class="big">{Video-500}</div><div class="med">{Video-250}</div>
+                    {block:Caption}<div class="meta">{Caption}</div>
+                    <a href="{Permalink}" title="View this video" class="date">{12Hour}:{Minutes}{AmPm}</a>{/block:Caption}
+                </div>
+                {/block:Video}
+                {block:Audio}
+                <div class="audio">
+                    <div class="player">{AudioPlayerBlack}</div>
+                    <div class="rotate">
+                        {block:Caption}
+                            <div class="caption">{Caption}</div>
+                        {/block:Caption}
+
+                        <div class="count">Play count: {FormattedPlayCount}</div>
+                    </div>
+                </div>
+                {/block:Audio}
+            </article>
+        
+            {block:RebloggedFrom}
+                <aside class="reblogged">
+                    <img src="{ReblogParentPortraitURL-24}" width="24" height="24" />
+                    <p>Via <a href="{ReblogParentURL}">{ReblogParentTitle}</a></p>
+                </aside>
+            {/block:RebloggedFrom}
+        
+            {block:PermalinkPage}
+                {block:PostNotes}
+                    <h3>{NoteCountWithLabel}</h3>
+                    {PostNotes}
+                {/block:PostNotes}
+            {/block:PermalinkPage}
+        {/block:Posts}
     </div>
-    <footer>
-
+    <footer id="page-footer">
+        &copy; {CopyrightYears} {Title}. Theme by <a href="http://www.9-bits.com">David Kaneda</a>.
     </footer>
   </div> <!--! end of #container -->
-
-
-  <!-- JavaScript at the bottom for fast page loading -->
-
-  <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if necessary -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
   <script>window.jQuery || document.write("<script src='js/libs/jquery-1.5.1.min.js'>\x3C/script>")</script>
-
-
-  <!-- scripts concatenated and minified via ant build script-->
-  <script src="js/plugins.js"></script>
-  <script src="js/script.js"></script>
-  <!-- end scripts-->
-
-
+  <!-- <script src="js/plugins.js"></script> -->
   <!--[if lt IE 7 ]>
     <script src="js/libs/dd_belatedpng.js"></script>
     <script>DD_belatedPNG.fix("img, .png_bg"); // Fix any <img> or .png_bg bg-images. Also, please read goo.gl/mZiyb </script>
   <![endif]-->
-
-
-  <!-- mathiasbynens.be/notes/async-analytics-snippet Change UA-XXXXX-X to be your site's ID -->
+  {block:IfGoogleAnalyticsID}
   <script>
-    var _gaq=[["_setAccount","UA-XXXXX-X"],["_trackPageview"]];
+    var _gaq=[["_setAccount","{text:Google Analytics ID}"],["_trackPageview"]];
     (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
     g.src=("https:"==location.protocol?"//ssl":"//www")+".google-analytics.com/ga.js";
     s.parentNode.insertBefore(g,s)}(document,"script"));
   </script>
-
+  {/block:IfGoogleAnalyticsID}
 </body>
 </html>
