@@ -70,7 +70,16 @@
                 {/block:ShowRandomLink}
                 <li><a href="{RSS}">Subscribe</a></li>
             </ul>
-        </ul>
+        </nav>
+        {block:Likes}
+            <div id="likes_container">
+                <h2>Stuff I Like</h2>
+                {Likes limit="5" summarize="100" width="150"}
+                <a href="http://www.tumblr.com/liked/by/{Name}">
+                    See more stuff I like
+                </a>
+            </div>
+        {/block:Likes}
     </header>
     <div id="main" role="main">
         {block:Posts}
@@ -191,7 +200,7 @@
   <!-- <script src="js/plugins.js"></script> -->
   <!--[if lt IE 7 ]>
     <script src="js/libs/dd_belatedpng.js"></script>
-    <script>DD_belatedPNG.fix("img, .png_bg"); // Fix any <img> or .png_bg bg-images. Also, please read goo.gl/mZiyb </script>
+    <script>DD_belatedPNG.fix("img, .png_bg");
   <![endif]-->
   {block:IfGoogleAnalyticsID}
   <script>
